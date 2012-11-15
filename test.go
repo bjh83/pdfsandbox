@@ -11,10 +11,15 @@ import(
 
 func main() {
 	if len(os.Args) != 3 {
-		fmt.Println("Please provide two files...")
+		fmt.Println("Please provide two file names...")
 		return
 	}
 	fileIn, fileErr := os.Open(os.Args[1])
+	if fileErr != nil {
+		fmt.Println(fileErr.Error())
+		return
+	}
+	fileOut, fileErr := os.Create(os.Args[2])
 	if fileErr != nil {
 		fmt.Println(fileErr.Error())
 		return
@@ -24,8 +29,14 @@ func main() {
 		fmt.Println(fileErr.Error())
 		return
 	}
-	fileData.Blocks[0].Text = fileData.Blocks[0].Text[0:10]
+	fileData.Blocks[0].Text = fileData.Blocks[0].Text[:10]
 	for index := 1; index < len(fileData.Blocks); index++ {
 		fileData.Blocks[index] = "\n"
 	}
-	edit.WriteChanges(fileIn, fileData)
+	fileErr = edit.WriteChanges(fileIn, fileOut, fileData)
+	if fileErr != nil {
+		fmt.Println(fileErr.Error())
+		return
+	}
+}
+
