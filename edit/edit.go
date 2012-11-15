@@ -7,6 +7,7 @@ import(
 	"regexp"
 	"compress/flate"
 	"github.com/bjh83/pdfstrip/decode"
+	"fmt"
 )
 
 func replaceText(reader *bufio.Reader, writer io.Writer, newText string) error {
@@ -22,6 +23,7 @@ func replaceText(reader *bufio.Reader, writer io.Writer, newText string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(byteBuffer[0:15])
 	byteBuffer = byteBuffer[12:]
 	byteBuffer[0] = byte(120)
 	byteBuffer[1] = byte(156)
