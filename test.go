@@ -27,6 +27,13 @@ func main() {
 		fmt.Println(fileErr.Error())
 		return
 	}
+	_, fileErr = fileIn.Seek(0, 0)
+	if fileErr != nil {
+		fmt.Println(fileErr.Error())
+		return
+	}
+	block, fileErr := decode.GetXRef(fileIn)
+	fmt.Println(block)
 	/*
 	fileData.Blocks[0].Text = fileData.Blocks[0].Text[:30]
 	for index := 1; index < len(fileData.Blocks); index++ {
