@@ -3,9 +3,7 @@ package main
 import(
 	"os"
 	"fmt"
-	"io/ioutil"
 	"github.com/bjh83/pdfstrip/decode"
-	"github.com/bjh83/pdfstrip/deformat"
 	"pdfplay/edit"
 )
 
@@ -31,7 +29,7 @@ func main() {
 	}
 	fileData.Blocks[0].Text = fileData.Blocks[0].Text[:10]
 	for index := 1; index < len(fileData.Blocks); index++ {
-		fileData.Blocks[index] = "\n"
+		fileData.Blocks[index].Text = "\n"
 	}
 	fileErr = edit.WriteChanges(fileIn, fileOut, fileData)
 	if fileErr != nil {
