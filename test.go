@@ -4,7 +4,7 @@ import(
 	"os"
 	"fmt"
 	"github.com/bjh83/pdfstrip/decode"
-	"pdfplay/edit"
+	"pdfsandbox/edit"
 )
 
 func main() {
@@ -27,10 +27,12 @@ func main() {
 		fmt.Println(fileErr.Error())
 		return
 	}
+	/*
 	fileData.Blocks[0].Text = fileData.Blocks[0].Text[:30]
 	for index := 1; index < len(fileData.Blocks); index++ {
 		fileData.Blocks[index].Text = "\n"
 	}
+	*/
 	_, fileErr = fileIn.Seek(0, 0)
 	if fileErr != nil {
 		fmt.Println(fileErr.Error())

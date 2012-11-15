@@ -5,6 +5,7 @@ import(
 	"io"
 	"bytes"
 	"regexp"
+	"strconv"
 	"compress/flate"
 	"github.com/bjh83/pdfstrip/decode"
 	"fmt"
@@ -12,24 +13,27 @@ import(
 
 func replaceText(reader *bufio.Reader, writer io.Writer, newText string) error {
 	endEx, _ := regexp.Compile("endobj")
-	byteBuffer := make([]byte, len(newText))
+	byteBuffer := make([]byte, len(newText) + 11)
 	buffer := bytes.NewBuffer(byteBuffer)
-	tempWriter, err := flate.NewWriter(buffer, -1)
+	tempWriter, err := flate.NewWriter(buffer, 5)
 	if err != nil {
 		return err
 	}
+	fmt.Println(newText[:32])
 	_, err = tempWriter.Write([]byte(newText))
-	err = tempWriter.Flush()
+	err = tempWriter.Close()
 	if err != nil {
 		return err
 	}
-	fmt.Println(byteBuffer[0:15])
-	byteBuffer = byteBuffer[12:]
 	byteBuffer[0] = byte(120)
 	byteBuffer[1] = byte(156)
+	lengthString := strconv.FormatInt(int64(len(byteBuffer)), 10)
+	writer.Write([]byte("<</Length " + lengthString + "/Filter/FlateDecode>>stream\n"))
 	_, err = writer.Write(byteBuffer)
+	_, err = writer.Write([]byte{'\n'})
 	var line string
 	for line, err = reader.ReadString('\n'); err == nil && !endEx.MatchString(line); line, err = reader.ReadString('\n') {}
+	_, err = writer.Write([]byte("endstream\n"))
 	_, err = writer.Write([]byte(line))
 	return err
 }
