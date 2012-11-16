@@ -33,7 +33,11 @@ func main() {
 		return
 	}
 	block, fileErr := decode.GetXRef(fileIn)
-	fmt.Println(block)
+	fmt.Println(block.ID)
+	data := []byte(block.Text)
+	for index := 5; index < len(data); index += 6 {
+		fmt.Printf("%x  %x%x%x  %x%x\n", data[index - 5], data[index - 4], data[index - 3], data[index - 2], data[index - 1], data[index - 0])
+	}
 	/*
 	fileData.Blocks[0].Text = fileData.Blocks[0].Text[:30]
 	for index := 1; index < len(fileData.Blocks); index++ {
